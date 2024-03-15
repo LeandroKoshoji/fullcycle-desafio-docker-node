@@ -21,6 +21,9 @@ services:
       - DB_USER=root
       - DB_PASSWORD=root
       - DB_NAME=nodedb
+    volumes:
+      - ./app:/usr/src/app
+      - /usr/src/app/node_modules
     networks:
       - app-network
     platform: linux/amd64
