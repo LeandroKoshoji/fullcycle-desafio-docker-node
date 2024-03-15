@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: nodedb
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - app-network
+    platform: linux/amd64
+    restart: always
+
+  app:
+    build: ./app
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=nodedb
+    networks:
+      - app-network
+    platform: linux/amd64
+    restart: always
+
+  nginx:
+    build: ./nginx
+    depends_on:
+      - app
+    ports:
+      - "8080:80"
+    networks:
+      - app-network
+    platform: linux/amd64
+    restart: always
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db-data:
